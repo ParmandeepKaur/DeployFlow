@@ -22,5 +22,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Backend Container') {
+            steps {
+                sh '''
+                docker stop deployflow-app || true
+                docker rm deployflow-app || true
+
+                docker run -d \
+                  --name deployflow-app \
+                  -p 5001:5000 \
+                  deployflow-backend
+                '''
+            }
+        }
     }
 }
