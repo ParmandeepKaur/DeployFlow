@@ -60,40 +60,54 @@ function Dashboard() {
   };
 
   const handleDeleteProject = async (id) => {
-  try {
-    const response = await fetch(
-      `http://localhost:5000/api/projects/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/projects/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Delete failed ❌");
+        return;
       }
-    );
 
-    const data = await response.json();
+      alert(data.message);
 
-    console.log("Status:", response.status);
-    console.log("Response:", data);
-
-    if (!response.ok) {
-      alert(data.error || "Delete failed ❌");
-      return;
+      fetchProjects();
+    } catch (error) {
+      console.log(error);
+      alert("Failed to delete project ❌");
     }
+  };
 
-    alert(data.message);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
 
-    fetchProjects();
-
-  } catch (error) {
-    console.log(error);
-    alert("Failed to delete project ❌");
-  }
-};
+    window.location.reload();
+  };
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>DeployFlow Dashboard</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>DeployFlow Dashboard</h1>
+
+        <button onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
 
       {token ? (
         <>
