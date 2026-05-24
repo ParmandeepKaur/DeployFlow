@@ -2,15 +2,20 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
   try {
-    const token = req.header("Authorization");
+    const authHeader = req.header("Authorization");
 
-    if (!token) {
+    if (!authHeader) {
       return res.status(401).json({
         message: "Access denied",
       });
     }
 
-    const verified = jwt.verify(token, "deployflowsecret");
+    const token = authHeader.split(" ")[1];
+
+    const verified = jwt.verify(
+      token,
+      "deployflowsecret"
+    );
 
     req.user = verified;
 
