@@ -15,10 +15,10 @@ pipeline {
             }
         }
 
-        stage('Backend Build') {
+        stage('Build Backend Image') {
             steps {
                 dir('backend') {
-                    sh 'docker-compose build'
+                    sh 'docker build -t deployflow-backend .'
                 }
             }
         }
