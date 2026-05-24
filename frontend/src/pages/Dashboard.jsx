@@ -89,83 +89,129 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-
     window.location.reload();
   };
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+        padding: "40px",
+        fontFamily: "Arial",
+      }}
+    >
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          maxWidth: "700px",
+          margin: "auto",
+          backgroundColor: "white",
+          borderRadius: "12px",
+          padding: "30px",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         }}
       >
-        <h1>DeployFlow Dashboard</h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}
+        >
+          <h1>🚀 DeployFlow</h1>
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-
-      {token ? (
-        <>
-          <p>Logged in successfully 🚀</p>
-
-          <h2>Create Project</h2>
-
-          <input
-            type="text"
-            placeholder="Project name"
-            value={projectName}
-            onChange={(e) =>
-              setProjectName(e.target.value)
-            }
-          />
-
-          <br />
-          <br />
-
-          <button onClick={handleCreateProject}>
-            Create Project
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: "#ff4d4d",
+              color: "white",
+              border: "none",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Logout
           </button>
+        </div>
 
-          <hr />
+        <p>Logged in successfully 🚀</p>
 
-          <h2>My Projects</h2>
+        <h2>Create Project</h2>
 
-          {projects.length === 0 ? (
-            <p>No projects found</p>
-          ) : (
-            projects.map((project) => (
-              <div
-                key={project.id}
+        <input
+          type="text"
+          placeholder="Enter project name"
+          value={projectName}
+          onChange={(e) =>
+            setProjectName(e.target.value)
+          }
+          style={{
+            width: "100%",
+            padding: "12px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            marginBottom: "15px",
+            boxSizing: "border-box",
+          }}
+        />
+
+        <button
+          onClick={handleCreateProject}
+          style={{
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          Create Project
+        </button>
+
+        <hr style={{ margin: "30px 0" }} />
+
+        <h2>My Projects</h2>
+
+        {projects.length === 0 ? (
+          <p>No projects found</p>
+        ) : (
+          projects.map((project) => (
+            <div
+              key={project.id}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "#f9f9f9",
+                padding: "15px",
+                borderRadius: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              <span>{project.name}</span>
+
+              <button
+                onClick={() =>
+                  handleDeleteProject(project.id)
+                }
                 style={{
-                  marginBottom: "10px",
+                  backgroundColor: "#ff4d4d",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 12px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
                 }}
               >
-                <span>
-                  • {project.name}
-                </span>
-
-                <button
-                  onClick={() =>
-                    handleDeleteProject(project.id)
-                  }
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            ))
-          )}
-        </>
-      ) : (
-        <p>Please login first ❌</p>
-      )}
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
