@@ -41,7 +41,30 @@ const getProjects = async (req, res) => {
   }
 };
 
+const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      "DELETE FROM projects WHERE id=$1 AND user_id=$2",
+      [id, req.user.id]
+    );
+
+    res.status(200).json({
+      message: "Project deleted 🗑️",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      error: "Failed to delete project",
+    });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
+  deleteProject,
 };

@@ -1,9 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
   const token = localStorage.getItem("token");
 
   const [projectName, setProjectName] = useState("");
+  const [projects, setProjects] = useState([]);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/projects",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      setProjects(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchProjects();
+    }
+  }, []);
 
   const handleCreateProject = async () => {
     try {
@@ -23,11 +49,47 @@ function Dashboard() {
 
       const data = await response.json();
 
-      alert(data.message || "Project created 🚀");
+      alert(data.message);
+
+      setProjectName("");
+
+      fetchProjects();
     } catch (error) {
       alert("Project creation failed ❌");
     }
   };
+
+  const handleDeleteProject = async (id) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/projects/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Status:", response.status);
+    console.log("Response:", data);
+
+    if (!response.ok) {
+      alert(data.error || "Delete failed ❌");
+      return;
+    }
+
+    alert(data.message);
+
+    fetchProjects();
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to delete project ❌");
+  }
+};
 
   return (
     <div style={{ padding: "40px" }}>
@@ -54,6 +116,38 @@ function Dashboard() {
           <button onClick={handleCreateProject}>
             Create Project
           </button>
+
+          <hr />
+
+          <h2>My Projects</h2>
+
+          {projects.length === 0 ? (
+            <p>No projects found</p>
+          ) : (
+            projects.map((project) => (
+              <div
+                key={project.id}
+                style={{
+                  marginBottom: "10px",
+                }}
+              >
+                <span>
+                  • {project.name}
+                </span>
+
+                <button
+                  onClick={() =>
+                    handleDeleteProject(project.id)
+                  }
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
         </>
       ) : (
         <p>Please login first ❌</p>
