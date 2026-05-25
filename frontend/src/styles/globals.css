@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+}
+
+h2 {
+  color: #222;
+}
+
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+table th {
+  font-weight: normal;
+}
