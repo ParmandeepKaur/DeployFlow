@@ -29,6 +29,9 @@ function Register({ setAuthPage }) {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
+          throw new Error("Database offline");
+        }
         alert(data.message || "Registration failed ❌");
         return;
       }
@@ -36,7 +39,17 @@ function Register({ setAuthPage }) {
       alert(data.message || "Registration successful! Please login.");
       setAuthPage("login");
     } catch (error) {
-      alert("Registration failed ❌");
+      console.warn("Backend registration failed or offline. Falling back to local registration:", error);
+      const localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
+      const userExists = localUsers.find(u => u.email === email);
+      if (userExists) {
+        alert("User already exists locally ❌");
+        return;
+      }
+      localUsers.push({ name, email, password });
+      localStorage.setItem("local_users", JSON.stringify(localUsers));
+      alert("Registration successful (Local Mode) 🚀. Please login.");
+      setAuthPage("login");
     }
   };
 

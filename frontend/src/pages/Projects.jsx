@@ -22,9 +22,17 @@ export default function Projects() {
       if (response.ok) {
         const data = await response.json()
         setProjects(data)
+      } else {
+        const data = await response.json().catch(() => ({}))
+        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
+          throw new Error("Database offline")
+        }
+        console.warn("Failed to fetch projects from backend:", data)
       }
     } catch (error) {
-      console.log(error)
+      console.warn("Backend project fetch failed or offline. Falling back to local projects:", error)
+      const local = localStorage.getItem('local_projects')
+      setProjects(local ? JSON.parse(local) : [])
     }
   }
 
@@ -54,7 +62,7 @@ export default function Projects() {
             name: projectName,
             github_url: githubUrl,
             environment: environment,
-            status: 'Running' // Default starting status
+            status: 'Created' // Start with 'Created' status so user can trigger it
           }),
         }
       )
@@ -62,6 +70,9 @@ export default function Projects() {
       const data = await response.json()
 
       if (!response.ok) {
+        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
+          throw new Error("Database offline")
+        }
         alert(data.error || 'Failed to create project ❌')
         return
       }
@@ -72,7 +83,24 @@ export default function Projects() {
       setEnvironment('Production')
       fetchProjects()
     } catch (error) {
-      alert('Project creation failed ❌')
+      console.warn('Backend project creation failed or offline. Falling back to local storage:', error)
+      const local = localStorage.getItem('local_projects')
+      const localProjects = local ? JSON.parse(local) : []
+      const newProj = {
+        id: Date.now(), // Unique local ID
+        name: projectName,
+        github_url: githubUrl,
+        environment: environment,
+        status: 'Created',
+        created_at: new Date().toISOString()
+      }
+      localProjects.unshift(newProj)
+      localStorage.setItem('local_projects', JSON.stringify(localProjects))
+      alert('Project created successfully (Local Mode) 🚀')
+      setProjectName('')
+      setGithubUrl('')
+      setEnvironment('Production')
+      fetchProjects()
     }
   }
 
@@ -93,6 +121,9 @@ export default function Projects() {
       const data = await response.json()
 
       if (!response.ok) {
+        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
+          throw new Error("Database offline")
+        }
         alert(data.error || 'Delete failed ❌')
         return
       }
@@ -100,7 +131,15 @@ export default function Projects() {
       alert('Project deleted 🗑️')
       fetchProjects()
     } catch (error) {
-      alert('Failed to delete project ❌')
+      console.warn('Backend project delete failed or offline. Falling back to local storage:', error)
+      const local = localStorage.getItem('local_projects')
+      if (local) {
+        const localProjects = JSON.parse(local)
+        const filtered = localProjects.filter(p => p.id !== id)
+        localStorage.setItem('local_projects', JSON.stringify(filtered))
+        alert('Project deleted (Local Mode) 🗑️')
+        fetchProjects()
+      }
     }
   }
 

@@ -69,8 +69,37 @@ const deleteProject = async (req, res) => {
   }
 };
 
+const updateProjectStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const result = await pool.query(
+      "UPDATE projects SET status=$1 WHERE id=$2 AND user_id=$3 RETURNING *",
+      [status, id, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    res.status(200).json({
+      message: "Project status updated 🚀",
+      project: result.rows[0],
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      error: "Failed to update project status",
+    });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
   deleteProject,
+  updateProjectStatus,
 };
