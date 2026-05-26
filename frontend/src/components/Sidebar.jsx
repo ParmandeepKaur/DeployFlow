@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { HomeIcon, ProjectsIcon, PipelinesIcon, DeploymentsIcon, LogsIcon, EnvironmentsIcon, NotificationsIcon, SettingsIcon } from './Icons.jsx'
+import { HomeIcon, ProjectsIcon, PipelinesIcon, DeploymentsIcon, LogsIcon, SettingsIcon } from './Icons.jsx'
 
 const menuItems = [
   { name: 'Dashboard', icon: <HomeIcon /> },
@@ -7,42 +7,55 @@ const menuItems = [
   { name: 'Pipelines', icon: <PipelinesIcon /> },
   { name: 'Deployments', icon: <DeploymentsIcon /> },
   { name: 'Logs', icon: <LogsIcon /> },
-  { name: 'Environments', icon: <EnvironmentsIcon /> },
-  { name: 'Notifications', icon: <NotificationsIcon /> },
   { name: 'Settings', icon: <SettingsIcon /> },
 ]
 
 export default function Sidebar({ activePage, setActivePage }) {
   const [collapsed, setCollapsed] = useState(false)
 
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userEmail')
+    window.location.reload()
+  }
+
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="logo-section" style={{ padding: '1rem', textAlign: 'center' }}>
-        <h2 style={{ color: '#3498db', margin: 0 }}>DeployFlow</h2>
-        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)} style={{ marginTop: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: '#555' }}>
+      <div className="logo-section">
+        <h2 className="logo-title">DeployFlow</h2>
+        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
           {collapsed ? '→' : '←'}
         </button>
       </div>
-      <nav style={{ marginTop: '2rem' }}>
+
+      <nav className="sidebar-nav">
         {menuItems.map(item => (
           <div
             key={item.name}
             className={`menu-item ${activePage === item.name ? 'active' : ''}`}
             onClick={() => setActivePage(item.name)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0.75rem 1rem',
-              cursor: 'pointer',
-              transition: 'background 0.2s',
-              backgroundColor: activePage === item.name ? '#2980b9' : 'transparent',
-              color: activePage === item.name ? '#fff' : '#ccc',
-            }}
           >
-            <div style={{ marginRight: collapsed ? 0 : '1rem' }}>{item.icon}</div>
-            {!collapsed && <span>{item.name}</span>}
+            {item.icon}
+            <span className="menu-item-text">{item.name}</span>
           </div>
         ))}
+
+        <div
+          className="menu-item"
+          onClick={handleLogout}
+          style={{ marginTop: 'auto', color: 'var(--accent-red)' }}
+        >
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="var(--accent-red)"
+            style={{ width: '20px', height: '20px' }}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+          <span className="menu-item-text">Logout</span>
+        </div>
       </nav>
     </aside>
   )

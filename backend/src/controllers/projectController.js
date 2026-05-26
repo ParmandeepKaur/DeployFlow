@@ -2,11 +2,17 @@ const pool = require("../config/db");
 
 const createProject = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, github_url, environment, status } = req.body;
 
     const newProject = await pool.query(
-      "INSERT INTO projects(name,user_id) VALUES($1,$2) RETURNING *",
-      [name, req.user.id]
+      "INSERT INTO projects(name, github_url, environment, status, user_id) VALUES($1, $2, $3, $4, $5) RETURNING *",
+      [
+        name,
+        github_url || "",
+        environment || "Production",
+        status || "Running",
+        req.user.id
+      ]
     );
 
     res.status(201).json({
@@ -26,7 +32,7 @@ const createProject = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     const projects = await pool.query(
-      "SELECT * FROM projects WHERE user_id=$1",
+      "SELECT * FROM projects WHERE user_id=$1 ORDER BY created_at DESC",
       [req.user.id]
     );
 

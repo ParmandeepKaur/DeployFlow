@@ -1,20 +1,119 @@
 .sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  color: #bdc3c7;
+  width: 260px;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
-  transition: width 0.3s;
+  height: 100vh;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+  flex-shrink: 0;
 }
 
 .sidebar.collapsed {
   width: 80px;
 }
 
-.menu-item:hover {
-  background-color: #34495e;
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  height: 70px;
 }
 
-.active {
-  background-color: #2980b9;
+.logo-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--accent-blue);
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+.collapse-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.collapse-btn:hover {
+  color: var(--text-primary);
+  background: var(--border-color);
+}
+
+.sidebar-nav {
+  padding: 1.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.menu-item:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.menu-item.active {
+  background-color: var(--accent-blue);
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
+.menu-item.active svg {
+  stroke: var(--bg-primary) !important;
+}
+
+.menu-item svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-secondary);
+  transition: stroke 0.2s;
+  flex-shrink: 0;
+}
+
+.menu-item:hover svg {
+  stroke: var(--text-primary);
+}
+
+.menu-item-text {
+  margin-left: 1rem;
+  transition: opacity 0.25s;
+}
+
+.sidebar.collapsed .menu-item-text {
+  opacity: 0;
+  display: none;
+}
+
+.sidebar.collapsed .logo-title {
+  display: none;
+}
+
+.sidebar.collapsed .logo-section {
+  justify-content: center;
 }
