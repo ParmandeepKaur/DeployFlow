@@ -187,19 +187,19 @@ export default function Dashboard() {
         <StatsCard
           title="Running Containers"
           value={loading ? '...' : containersCount}
-          icon="🧱"
+          icon="◉"
         />
 
         <StatsCard
           title="Pipeline Status"
           value={loading ? '...' : pipelineStatus}
-          icon="🔄"
+          icon="↻"
         />
 
         <StatsCard
           title="Deployment Status"
           value={loading ? '...' : deploymentStatus}
-          icon="🚀"
+          icon="▶"
         />
       </div>
 

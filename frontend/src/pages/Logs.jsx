@@ -184,7 +184,7 @@ export default function Logs() {
               cursor: (isRunning || !selectedProjectId) ? 'not-allowed' : 'pointer'
             }}
           >
-            {isRunning ? 'Pipeline Running...' : '🚀 Trigger Pipeline'}
+            {isRunning ? 'Pipeline Running...' : 'Trigger Pipeline'}
           </button>
         </div>
       </div>

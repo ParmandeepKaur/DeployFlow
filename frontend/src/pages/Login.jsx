@@ -30,26 +30,26 @@ function Login({ setAuthPage }) {
         if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
           throw new Error("Database offline");
         }
-        alert(data.message || "Login failed ❌");
+        alert(data.message || "Login failed ✘");
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", email);
 
-      alert("Login successful 🚀");
+      alert("Login successful!");
       window.location.reload();
     } catch (error) {
       console.warn("Backend login failed or offline. Falling back to local validation:", error);
       const localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
       const user = localUsers.find(u => u.email === email && u.password === password);
       if (!user) {
-        alert("Invalid credentials (Local Mode) ❌");
+        alert("Invalid credentials (Local Mode) ✘");
         return;
       }
       localStorage.setItem("token", "local-token-xyz");
       localStorage.setItem("userEmail", email);
-      alert("Login successful (Local Mode) 🚀");
+      alert("Login successful (Local Mode) ✓");
       window.location.reload();
     }
   };

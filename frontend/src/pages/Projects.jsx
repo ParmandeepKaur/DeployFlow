@@ -124,13 +124,13 @@ export default function Projects() {
 
           alert(
             data.error ||
-              'Failed to create project ❌'
+              'Failed to create project ✘'
           )
           return
         }
 
         alert(
-          'Project created successfully 🚀'
+          'Project created successfully!'
         )
 
         setProjectName('')
@@ -178,7 +178,7 @@ export default function Projects() {
         )
 
         alert(
-          'Project created successfully (Local Mode) 🚀'
+          'Project created successfully (Local Mode)'
         )
 
         setProjectName('')
@@ -230,7 +230,7 @@ export default function Projects() {
         console.error(error)
 
         alert(
-          'Delete failed ❌'
+          'Delete failed ✘'
         )
       }
     }
@@ -330,8 +330,8 @@ export default function Projects() {
 
         alert(
           status === 'Running'
-            ? 'Deployment started 🚀'
-            : 'Project stopped ⛔'
+            ? 'Deployment started ▶'
+            : 'Project stopped ■'
         )
 
         fetchProjects()
@@ -339,7 +339,7 @@ export default function Projects() {
         console.error(error)
 
         alert(
-          'Failed to update project status ❌'
+          'Failed to update project status ✘'
         )
       }
     }
@@ -511,7 +511,7 @@ export default function Projects() {
                   '12px',
               }}
             >
-              Add Project 🚀
+              Add Project ◈
             </button>
           </form>
         </div>
@@ -648,7 +648,7 @@ export default function Projects() {
                                 className="btn btn-primary"
                               >
                                 Deploy
-                                🚀
+                                ▶
                               </button>
                             ) : (
                               <button
@@ -661,7 +661,7 @@ export default function Projects() {
                                 className="btn btn-warning"
                               >
                                 Stop
-                                ⛔
+                                ■ 
                               </button>
                             )}
 
