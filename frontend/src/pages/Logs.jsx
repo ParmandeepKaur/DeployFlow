@@ -63,6 +63,11 @@ export default function Logs() {
 
   useEffect(() => {
     fetchProjects()
+
+    const savedLogs = localStorage.getItem('deployment_logs')
+    if (savedLogs) {
+      setLogs(JSON.parse(savedLogs))
+    }
   }, [])
 
   // Autoscroll to bottom of logs
