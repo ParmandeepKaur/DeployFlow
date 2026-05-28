@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../api";
 
 function Register({ setAuthPage }) {
   const [name, setName] = useState("");
@@ -11,41 +12,25 @@ function Register({ setAuthPage }) {
       return;
     }
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
-          throw new Error("Database offline");
-        }
-        alert(data.message || "Registration failed ❌");
-        return;
-      }
+      const data = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
 
       alert(data.message || "Registration successful! Please login.");
       setAuthPage("login");
     } catch (error) {
       console.warn("Backend registration failed or offline. Falling back to local registration:", error);
+      
       const localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
       const userExists = localUsers.find(u => u.email === email);
+      
       if (userExists) {
         alert("User already exists locally ❌");
         return;
       }
+      
       localUsers.push({ name, email, password });
       localStorage.setItem("local_users", JSON.stringify(localUsers));
       alert("Registration successful (Local Mode) 🚀. Please login.");
@@ -77,7 +62,7 @@ function Register({ setAuthPage }) {
           DeployFlow
         </h1>
         <p style={{ color: "var(--text-secondary)", textAlign: "center", marginBottom: "2rem", fontSize: "0.9rem" }}>
-          Create a new account
+          Create a new student/team account
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -85,7 +70,7 @@ function Register({ setAuthPage }) {
             <label style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Full Name</label>
             <input
               type="text"
-              placeholder="John Doe"
+              placeholder="e.g. Jane Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="form-control"
@@ -97,7 +82,7 @@ function Register({ setAuthPage }) {
             <label style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Email Address</label>
             <input
               type="email"
-              placeholder="name@example.com"
+              placeholder="student@example.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
@@ -127,7 +112,7 @@ function Register({ setAuthPage }) {
               borderRadius: "8px",
             }}
           >
-            Create Account
+            Create Account ◈
           </button>
         </div>
 

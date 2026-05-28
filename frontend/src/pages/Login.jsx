@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../api";
 
 function Login({ setAuthPage }) {
   const [email, setEmail] = useState("");
@@ -10,29 +11,7 @@ function Login({ setAuthPage }) {
       return;
     }
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 500 || data.error?.toLowerCase().includes("database") || data.error?.toLowerCase().includes("failed")) {
-          throw new Error("Database offline");
-        }
-        alert(data.message || "Login failed ✘");
-        return;
-      }
+      const data = await api.post("/auth/login", { email, password });
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", email);
@@ -41,12 +20,15 @@ function Login({ setAuthPage }) {
       window.location.reload();
     } catch (error) {
       console.warn("Backend login failed or offline. Falling back to local validation:", error);
+      
       const localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
       const user = localUsers.find(u => u.email === email && u.password === password);
+      
       if (!user) {
         alert("Invalid credentials (Local Mode) ✘");
         return;
       }
+      
       localStorage.setItem("token", "local-token-xyz");
       localStorage.setItem("userEmail", email);
       alert("Login successful (Local Mode) ✓");
@@ -78,7 +60,7 @@ function Login({ setAuthPage }) {
           DeployFlow
         </h1>
         <p style={{ color: "var(--text-secondary)", textAlign: "center", marginBottom: "2rem", fontSize: "0.9rem" }}>
-          Sign in to your DevOps dashboard
+          Sign in to the Student Project Deployment & Monitoring Platform
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -86,7 +68,7 @@ function Login({ setAuthPage }) {
             <label style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Email Address</label>
             <input
               type="email"
-              placeholder="name@example.com"
+              placeholder="student@example.edu"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
@@ -116,7 +98,7 @@ function Login({ setAuthPage }) {
               borderRadius: "8px",
             }}
           >
-            Sign In
+            Sign In ⇥
           </button>
         </div>
 

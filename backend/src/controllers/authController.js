@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { trackEvent } = require("./analyticsTracker");
 
 const registerUser = async (req, res) => {
   try {
@@ -23,6 +24,8 @@ const registerUser = async (req, res) => {
       "INSERT INTO users(name,email,password) VALUES($1,$2,$3) RETURNING id,name,email",
       [name, email, hashedPassword]
     );
+
+    await trackEvent(newUser.rows[0].id, "register", { email: newUser.rows[0].email });
 
     res.status(201).json({
       message: "User registered successfully",
@@ -73,6 +76,8 @@ const loginUser = async (req, res) => {
         expiresIn: "1d",
       }
     );
+
+    await trackEvent(user.rows[0].id, "login", { email: user.rows[0].email });
 
     res.status(200).json({
       message: "Login successful",

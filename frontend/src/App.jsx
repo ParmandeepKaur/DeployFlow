@@ -14,7 +14,7 @@ import Register from './pages/Register.jsx'
 
 function App() {
   const [activePage, setActivePage] =
-    useState('Dashboard')
+    useState('System Overview')
 
   const [authPage, setAuthPage] =
     useState('login')
@@ -24,22 +24,22 @@ function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'Dashboard':
+      case 'System Overview':
         return <Dashboard />
 
-      case 'Projects':
+      case 'Project Management':
         return <Projects />
 
-      case 'Pipelines':
+      case 'CI/CD Pipelines':
         return <Pipelines />
 
-      case 'Deployments':
+      case 'Deployment Monitoring':
         return <Deployments />
 
-      case 'Logs':
+      case 'Pipeline Execution Logs':
         return <Logs />
 
-      case 'Settings':
+      case 'Platform Configuration':
         return <Settings />
 
       default:
@@ -79,9 +79,26 @@ function App() {
           flex: 1,
           backgroundColor: 'var(--bg-primary)',
           overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {renderPage()}
+        <div style={{ flex: 1 }}>
+          {renderPage()}
+        </div>
+        <footer
+          style={{
+            textAlign: 'center',
+            padding: '1rem 2rem',
+            fontSize: '0.8rem',
+            color: 'var(--text-secondary)',
+            borderTop: '1px solid var(--border-color)',
+            background: 'var(--bg-secondary)',
+            marginTop: 'auto',
+          }}
+        >
+          DeployFlow v1.0 — Student Project Deployment & Monitoring Platform
+        </footer>
       </div>
     </div>
   )
