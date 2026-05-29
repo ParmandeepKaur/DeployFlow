@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { api } from '../api';
+import toast from "react-hot-toast";
 
 const initialLogs = [
   { level: 'INFO', message: 'Triggered by Git Hook: Commit [a4b2c1d]' },
@@ -109,7 +110,7 @@ export default function Logs() {
   const updateProjectStatusToRunning = async (id) => {
     try {
       await api.put(`/projects/${id}/status`, { status: 'Running' });
-      alert('Pipeline finished! Project is now Running 🚀');
+      toast.success('Pipeline finished! Project is now Running 🚀');
       fetchProjects();
     } catch (e) {
       console.warn('Backend update failed, updating local fallback state.');
@@ -123,7 +124,7 @@ export default function Logs() {
           return p;
         });
         localStorage.setItem('local_projects', JSON.stringify(updated));
-        alert('Pipeline finished! Project status updated (Local Mode) 🚀');
+        toast.success('Pipeline finished! Project status updated');
         fetchProjects();
       }
     }
@@ -133,7 +134,7 @@ export default function Logs() {
   const triggerPipelineSimulation = () => {
     if (isRunning) return;
     if (!selectedProjectId) {
-      alert('Please select or register a project first!');
+      toast.error('Please select or register a project first!');
       return;
     }
     setIsRunning(true);

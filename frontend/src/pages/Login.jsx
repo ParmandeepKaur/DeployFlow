@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 function Login({ setAuthPage }) {
   const [email, setEmail] = useState("");
@@ -7,7 +8,7 @@ function Login({ setAuthPage }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
@@ -16,22 +17,23 @@ function Login({ setAuthPage }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", email);
 
-      alert("Login successful!");
+      toast.success("Login successful!");
       window.location.reload();
     } catch (error) {
+      toast.error("Backend login failed or offline. Falling back to local validation:");
       console.warn("Backend login failed or offline. Falling back to local validation:", error);
       
       const localUsers = JSON.parse(localStorage.getItem("local_users") || "[]");
       const user = localUsers.find(u => u.email === email && u.password === password);
       
       if (!user) {
-        alert("Invalid credentials (Local Mode) ✘");
+        toast.error("Invalid credentials ✘");
         return;
       }
       
       localStorage.setItem("token", "local-token-xyz");
       localStorage.setItem("userEmail", email);
-      alert("Login successful (Local Mode) ✓");
+      toast.success("Login successful ✓");
       window.location.reload();
     }
   };

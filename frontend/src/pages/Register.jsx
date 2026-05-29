@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../api";
+import toast from "react-hot-toast";
 
 function Register({ setAuthPage }) {
   const [name, setName] = useState("");
@@ -8,7 +9,7 @@ function Register({ setAuthPage }) {
 
   const handleRegister = async () => {
     if (!name || !email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
@@ -18,7 +19,7 @@ function Register({ setAuthPage }) {
         password,
       });
 
-      alert(data.message || "Registration successful! Please login.");
+      toast.success(data.message || "Registration successful! Please login.");
       setAuthPage("login");
     } catch (error) {
       console.warn("Backend registration failed or offline. Falling back to local registration:", error);
@@ -27,13 +28,13 @@ function Register({ setAuthPage }) {
       const userExists = localUsers.find(u => u.email === email);
       
       if (userExists) {
-        alert("User already exists locally ❌");
+        toast.error("User already exists locally ❌");
         return;
       }
       
       localUsers.push({ name, email, password });
       localStorage.setItem("local_users", JSON.stringify(localUsers));
-      alert("Registration successful (Local Mode) 🚀. Please login.");
+      toast.success("Registration successful. Please login.");
       setAuthPage("login");
     }
   };

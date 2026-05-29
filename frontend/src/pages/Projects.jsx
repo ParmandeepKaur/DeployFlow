@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import toast from "react-hot-toast";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -56,7 +57,7 @@ export default function Projects() {
   const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!projectName.trim()) {
-      alert('Project Title is required');
+      toast.error('Project Title is required');
       return;
     }
 
@@ -69,7 +70,7 @@ export default function Projects() {
         environment,
       });
 
-      alert('Project created successfully!');
+      toast.success('Project created successfully!');
       setProjectName('');
       setDescription('');
       setGithubUrl('');
@@ -103,7 +104,7 @@ export default function Projects() {
       localProjects.unshift(newProj);
       localStorage.setItem('local_projects', JSON.stringify(localProjects));
       
-      alert('Project created successfully (Local Fallback Mode) ◈');
+      toast.success('Project created successfully ◈');
       setProjectName('');
       setDescription('');
       setGithubUrl('');
@@ -125,7 +126,7 @@ export default function Projects() {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     if (!editName.trim()) {
-      alert('Project Title is required');
+      toast.error('Project Title is required');
       return;
     }
 
@@ -138,7 +139,7 @@ export default function Projects() {
         environment: editEnvironment,
       });
 
-      alert('Project updated successfully 📝');
+      toast.success('Project updated successfully 📝');
       setEditingProject(null);
       fetchProjects();
     } catch (err) {
@@ -162,7 +163,7 @@ export default function Projects() {
           return p;
         });
         localStorage.setItem('local_projects', JSON.stringify(localProjects));
-        alert('Project updated successfully (Local Mode) 📝');
+        toast.success('Project updated successfully');
         setEditingProject(null);
         fetchProjects();
       }
@@ -174,9 +175,10 @@ export default function Projects() {
 
     try {
       await api.delete(`/projects/${id}`);
-      alert('Project deleted 🗑');
+      toast.success('Project deleted 🗑');
       fetchProjects();
     } catch (err) {
+      toast.error('Backend delete failed, removing from local storage.');
       console.warn('Backend delete failed, removing from local storage.', err);
       // Local Mode delete
       const local = localStorage.getItem('local_projects');
@@ -184,7 +186,7 @@ export default function Projects() {
         let localProjects = JSON.parse(local);
         localProjects = localProjects.filter(p => p.id !== id);
         localStorage.setItem('local_projects', JSON.stringify(localProjects));
-        alert('Project deleted (Local Mode) 🗑');
+        toast.success('Project deleted 🗑');
         fetchProjects();
       }
     }
@@ -208,7 +210,7 @@ export default function Projects() {
         localStorage.setItem(`project_logs_${id}`, JSON.stringify(deploymentLogs));
       }
 
-      alert(status === 'Running' ? 'Deployment started ▶' : 'Project stopped ■');
+      toast.success(status === 'Running' ? 'Deployment started ▶' : 'Project stopped ■');
       fetchProjects();
     } catch (err) {
       console.warn('Backend action update failed, updating local state.', err);
@@ -236,7 +238,7 @@ export default function Projects() {
           localStorage.setItem(`project_logs_${id}`, JSON.stringify(deploymentLogs));
         }
 
-        alert(status === 'Running' ? 'Deployment started (Local Mode) ▶' : 'Project stopped (Local Mode) ■');
+        toast.success(status === 'Running' ? 'Deployment started ▶' : 'Project stopped ■');
         fetchProjects();
       }
     }
@@ -249,7 +251,7 @@ export default function Projects() {
         faculty_review_status: reviewStatus,
         deployment_approval_state: approvalState,
       });
-      alert(`Project status updated: ${reviewStatus} / ${approvalState}`);
+      toast.success(`Project status updated: ${reviewStatus} / ${approvalState}`);
       fetchProjects();
     } catch (err) {
       console.warn('Backend approval failed, updating local state.', err);
@@ -268,7 +270,7 @@ export default function Projects() {
           return p;
         });
         localStorage.setItem('local_projects', JSON.stringify(localProjects));
-        alert(`Project status updated (Local Mode): ${reviewStatus} / ${approvalState}`);
+        toast.success(`Project status updated: ${reviewStatus} / ${approvalState}`);
         fetchProjects();
       }
     }
@@ -277,7 +279,7 @@ export default function Projects() {
   const handleShareProject = (project) => {
     const demoUrl = project.live_demo_url || 'https://deployflow.local/demo-pending';
     navigator.clipboard.writeText(demoUrl);
-    alert(`Live Demo Link copied to clipboard: ${demoUrl}`);
+    toast.success(`Live Demo Link copied to clipboard: ${demoUrl}`);
   };
 
   const getReviewBadgeClass = (status) => {

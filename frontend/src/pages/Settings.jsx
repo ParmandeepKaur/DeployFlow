@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api';
+import toast from "react-hot-toast";
 
 export default function Settings() {
   const email = localStorage.getItem('userEmail') || 'developer@deployflow.local';
@@ -25,7 +26,7 @@ export default function Settings() {
       console.log('Skipped event log to backend (offline mode).');
     }
 
-    alert('Configuration saved successfully ⚙');
+    toast.success('Configuration saved successfully ⚙');
   };
 
   const clearLogs = () => {
@@ -37,7 +38,7 @@ export default function Settings() {
       }
     });
 
-    alert('Build execution logs cleared ⌫');
+    toast.success('Build execution logs cleared ⌫');
   };
 
   const resetDemoData = () => {
@@ -57,7 +58,7 @@ export default function Settings() {
       }
     });
 
-    alert('Demo environment reset successfully ↻');
+    toast.success('Demo environment reset successfully ↻');
     window.location.reload();
   };
 
