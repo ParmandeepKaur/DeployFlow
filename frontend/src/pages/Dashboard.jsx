@@ -153,19 +153,19 @@ export default function Dashboard() {
         <StatsCard
           title="Total Users"
           value={loading ? '...' : stats.totalUsers}
-          icon="👥"
+          icon="👤"
         />
 
         <StatsCard
           title="Projects Managed"
           value={loading ? '...' : stats.totalProjects}
-          icon="📁"
+          icon="🗁"
         />
 
         <StatsCard
           title="Deployments Triggered"
           value={loading ? '...' : stats.deploymentsTriggered}
-          icon="🚀"
+          icon="✈"
         />
 
         <StatsCard
@@ -177,13 +177,13 @@ export default function Dashboard() {
         <StatsCard
           title="Platform Health"
           value={loading ? '...' : stats.platformHealth}
-          icon="💚"
+          icon="♡"
         />
 
         <StatsCard
           title="Most Used Env"
           value={loading ? '...' : stats.mostUsedEnvironment}
-          icon="🌐"
+          icon="♽"
         />
       </div>
 
